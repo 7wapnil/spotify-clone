@@ -17,26 +17,39 @@ function App() {
     const _token = hash.access_token;
 
     if (_token) {
+      spotify.setAccessToken(_token);
+
       dispatch({
         type: 'SET_TOKEN',
         token: _token
-      })
+      });
 
-      spotify.setAccessToken(_token);
+      spotify
+        .getMe()
+        .then(user => {
+          dispatch({
+            type: 'SET_USER',
+            user
+          });
+        });
 
-      spotify.getMe().then(user => {
-        dispatch({
-          type: 'SET_USER',
-          user
-        })
-      })
+      spotify
+        .getUserPlaylists()
+        .then((playlists) => {
+          dispatch({
+            type: 'SET_PLAYLISTS',
+            playlists
+          });
+        });
 
-      spotify.getUserPlaylists().then((playlists) => {
-        dispatch({
-          type: 'SET_PLAYLISTS',
-          playlists
-        })
-      })
+      spotify
+        .getPlaylist('37i9dQZEVXcRgel4TmpAYl')
+        .then((discover_weekly) => {
+          dispatch({
+            type: 'SET_DISCOVER_WEEKLY',
+            discover_weekly
+          });
+        });
     }
   }, []);
 
